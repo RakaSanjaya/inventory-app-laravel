@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('/history', [HistoryActivityController::class, 'index'])->name('history.index');
+    Route::get('/history/filter', [HistoryActivityController::class, 'filter'])->name('history.filter');
     Route::delete('/history/{id}', [HistoryActivityController::class, 'destroy'])->name('history.destroy');
     Route::delete('/history', [HistoryActivityController::class, 'destroyAll'])->name('history.destroyAll');
     Route::get('/account', [AccountController::class, 'show'])->name('account.show');

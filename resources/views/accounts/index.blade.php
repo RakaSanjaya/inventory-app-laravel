@@ -1,75 +1,256 @@
 @extends('layouts.app')
 
+@section('title', 'Accounts')
+
 @section('content')
-<div class="container mx-auto my-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-8">Accounts</h1>
-
-    @if(session('success'))
-    <div class="bg-green-100 text-green-800 p-4 rounded-md mb-4 text-center">
-        {{ session('success') }}
-    </div>
-    @elseif(session('error'))
-    <div class="bg-red-100 text-red-800 p-4 rounded-md mb-4 text-center">
-        {{ session('error') }}
-    </div>
-    @endif
-
-    <div class="overflow-x-auto shadow-md border border-gray-200">
-        <table class="min-w-full table-auto text-sm text-center">
-            <thead>
-                <tr class="bg-emerald-700 text-white">
-                    <th class="py-3 px-4 font-medium">No</th> <!-- Added No column -->
-                    <th class="py-3 px-4 font-medium">Name</th>
-                    <th class="py-3 px-4 font-medium">Email</th>
-                    <th class="py-3 px-4 font-medium">Role</th>
+    <div class="min-h-screen bg-gray-50 py-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Header Section -->
+            <div class="mb-8">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                    <div>
+                        <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Manajemen Akun</h1>
+                        <p class="text-gray-600 text-lg">Kelola semua akun pengguna dalam sistem inventory</p>
+                    </div>
                     @if(auth()->user()->role == 'super_admin')
-                    <th class="py-3 px-4 font-medium">Actions</th>
-                    @endif
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($users as $index => $user)
-                <tr class="hover:bg-gray-100 bg-white border-b border-gray-200">
-                    <td class="py-3 px-4">{{ $index + 1 }}</td> <!-- Display user number -->
-                    <td class="py-3 px-4">{{ $user->name }}</td>
-                    <td class="py-3 px-4">
-                        @if(auth()->user()->role == 'admin' || auth()->user()->role == 'user')
-                        {{ substr($user->email, 0, 3) . '***@***' }}
-                        @else
-                        {{ $user->email }}
-                        @endif
-                    </td>
-                    <td class="py-3 px-4 capitalize">{{ $user->role }}</td>
-                    @if(auth()->user()->role == 'super_admin')
-                    <td class="flex items-center justify-center py-3 px-4">
-                        <a href="{{ route('accounts.edit', $user->id) }}" class="bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-600 transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5
-                            ">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                            </svg>
-                        </a>
-                        <a href="{{ route('accounts.show', $user->id) }}" class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition-all ml-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5
-                            ">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                            </svg>
-                        </a>
-                        <form action="{{ route('accounts.destroy', $user->id) }}" method="POST" style="display:inline;" class="inline-block">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition-all ml-2" onclick="return confirm('Are you sure you want to delete this account?')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5
-                            ">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                        <div class="mt-4 lg:mt-0">
+                            <a href=""
+                                class="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                 </svg>
-                            </button>
-                        </form>
-                    </td>
+                                <span>Tambah Akun Baru</span>
+                            </a>
+                        </div>
                     @endif
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </div>
+            </div>
+
+            <!-- Alert Messages -->
+            @if(session('success'))
+                <div
+                    class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center gap-3">
+                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="font-medium">{{ session('success') }}</span>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-3">
+                    <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="font-medium">{{ session('error') }}</span>
+                </div>
+            @endif
+
+            <!-- Accounts Table -->
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-green-600 to-emerald-500 px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-white">Daftar Akun Pengguna</h2>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <span class="text-white/90 text-sm">Total: {{ $users->count() }} akun</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    No</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    Nama</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    Email</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    Role</th>
+                                @if(auth()->user()->role == 'super_admin')
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        Aksi</th>
+                                @endif
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @foreach($users as $index => $user)
+                                <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                    <!-- No -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-500">{{ $index + 1 }}</div>
+                                    </td>
+
+                                    <!-- Name -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="flex-shrink-0 w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
+                                                <div class="text-xs text-gray-500">ID: {{ $user->id }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Email -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">
+                                            @if(auth()->user()->role == 'admin' || auth()->user()->role == 'user')
+                                                {{ substr($user->email, 0, 3) . '***' . substr($user->email, strpos($user->email, '@')) }}
+                                            @else
+                                                {{ $user->email }}
+                                            @endif
+                                        </div>
+                                    </td>
+
+                                    <!-- Role -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @php
+                                            $roleColors = [
+                                                'super_admin' => 'bg-purple-100 text-purple-800',
+                                                'admin' => 'bg-blue-100 text-blue-800',
+                                                'user' => 'bg-green-100 text-green-800'
+                                            ];
+                                            $roleColor = $roleColors[$user->role] ?? 'bg-gray-100 text-gray-800';
+                                        @endphp
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $roleColor }} capitalize">
+                                            {{ $user->role }}
+                                        </span>
+                                    </td>
+
+                                    <!-- Actions -->
+                                    @if(auth()->user()->role == 'super_admin')
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center gap-2">
+                                                <!-- Edit -->
+                                                <a href="{{ route('accounts.edit', $user->id) }}"
+                                                    class="inline-flex items-center gap-1 bg-yellow-50 hover:bg-yellow-100 text-yellow-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                                                    title="Edit Akun">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                        </path>
+                                                    </svg>
+                                                    Edit
+                                                </a>
+
+                                                <!-- View -->
+                                                <a href="{{ route('accounts.show', $user->id) }}"
+                                                    class="inline-flex items-center gap-1 bg-blue-50 hover:bg-blue-100 text-blue-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                                                    title="Lihat Detail">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z">
+                                                        </path>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    </svg>
+                                                    Lihat
+                                                </a>
+
+                                                <!-- Delete -->
+                                                <form action="{{ route('accounts.destroy', $user->id) }}" method="POST"
+                                                    class="inline-block">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="inline-flex items-center gap-1 bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus akun ini?')"
+                                                        title="Hapus Akun">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                            </path>
+                                                        </svg>
+                                                        Hapus
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Role Legend -->
+            <div class="mt-6 bg-white rounded-2xl border border-gray-100 shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Keterangan Role</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="flex items-center gap-3">
+                        <span
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                            Super Admin
+                        </span>
+                        <span class="text-sm text-gray-600">Akses penuh ke semua fitur</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            Admin
+                        </span>
+                        <span class="text-sm text-gray-600">Kelola produk dan stok</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            User
+                        </span>
+                        <span class="text-sm text-gray-600">Hanya melihat data</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            @if($users->count() == 0)
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-lg p-12 text-center">
+                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                               d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z">
+                        </path>
+                    </svg>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Belum ada akun</h3>
+                    <p class="text-gray-500 mb-6">Mulai dengan menambahkan akun pertama Anda</p>
+                    @if(auth()->user()->role == 'super_admin')
+                        <a href=""
+                            class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors duration-200">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Tambah Akun Pertama
+                        </a>
+                    @endif
+                </div>
+            @endif
+        </div>
     </div>
-</div>
 @endsection
