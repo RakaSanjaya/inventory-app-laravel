@@ -11,7 +11,6 @@ class ProductTransaction extends Model
 
     protected $fillable = [
         'product_id',
-        'supplier_id',
         'user_id',
         'storage_location_id',
         'quantity',
@@ -23,10 +22,6 @@ class ProductTransaction extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function supplier()
-    {
-        return $this->belongsTo(Supplier::class);
-    }
 
     public function user()
     {
