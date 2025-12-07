@@ -14,8 +14,17 @@ class Product extends Model
         'category',
         'sku',
         'stock',
+        'barcode',
+        'barcode_image',
         'storage_location',
+        'supplier_id',
         'price',
         'description',
     ];
+
+    // Relasi ke Supplier
+    public function supplier()
+    {
+        return $this->belongsTo(\App\Models\Supplier::class);
+    }
 }

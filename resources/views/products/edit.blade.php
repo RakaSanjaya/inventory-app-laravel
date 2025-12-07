@@ -150,78 +150,167 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                            <!-- Category -->
-                            <div class="space-y-2">
-                                <label for="category" class="block text-sm font-semibold text-gray-700">
-                                    Kategori <span class="text-red-500">*</span>
-                                </label>
-                                <div class="relative">
-                                    <select name="category" id="category"
-                                        class="w-full border border-gray-300 rounded-xl py-3 px-4 pl-12 focus:border-green-600 focus:ring-2 focus:ring-green-200 transition duration-300 ease-in-out outline-none appearance-none bg-white"
-                                        required>
-                                        <option value="">Pilih Kategori</option>
-                                        @foreach ($categories as $category)
-                                            <option value="{{ $category->name }}" {{ old('category', $product->category) == $category->name ? 'selected' : '' }}>
-                                                {{ $category->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                        <!-- Barcode Section -->
+                        <div class="space-y-2">
+                            <label for="barcode" class="block text-sm font-semibold text-gray-700">
+                                Barcode <span class="text-red-500">*</span>
+                            </label>
+                            <div class="flex gap-3">
+                                <div class="relative flex-1">
+                                    <input type="text" name="barcode" id="barcode"
+                                        value="{{ old('barcode', $product->barcode) }}"
+                                        class="w-full border border-gray-300 rounded-xl py-3 px-4 pl-12 focus:border-green-600 focus:ring-2 focus:ring-green-200 transition duration-300 ease-in-out outline-none"
+                                        placeholder="Masukkan atau generate barcode" required>
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                @error('category')
-                                    <p class="text-red-500 text-sm mt-1 flex items-center gap-1">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        {{ $message }}
-                                    </p>
-                                @enderror
-                            </div>
-
-                            <!-- Storage Location -->
-                            <div class="space-y-2">
-                                <label for="storage_location" class="block text-sm font-semibold text-gray-700">
-                                    Lokasi Penyimpanan <span class="text-red-500">*</span>
-                                </label>
-                                <div class="relative">
-                                    <select name="storage_location" id="storage_location"
-                                        class="w-full border border-gray-300 rounded-xl py-3 px-4 pl-12 focus:border-green-600 focus:ring-2 focus:ring-green-200 transition duration-300 ease-in-out outline-none appearance-none bg-white"
-                                        required>
-                                        <option value="">Pilih Lokasi Penyimpanan</option>
-                                        @foreach ($storageLocations as $storageLocation)
-                                            <option value="{{ $storageLocation->name }}" {{ old('storage_location', $product->storage_location) == $storageLocation->name ? 'selected' : '' }}>
-                                                {{ $storageLocation->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                                                d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z">
                                             </path>
                                         </svg>
                                     </div>
                                 </div>
-                                @error('storage_location')
-                                    <p class="text-red-500 text-sm mt-1 flex items-center gap-1">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        {{ $message }}
-                                    </p>
-                                @enderror
+                                <button type="button" id="generate-barcode"
+                                    class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                                        </path>
+                                    </svg>
+                                    <span>Generate Baru</span>
+                                </button>
                             </div>
+                            <p class="text-xs text-gray-500 mt-1">Klik "Generate Baru" untuk membuat barcode baru, atau edit
+                                manual. Barcode saat ini: <span class="font-semibold">{{ $product->barcode }}</span></p>
+                            @error('barcode')
+                                <p class="text-red-500 text-sm mt-1 flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
+
+                      <!-- Tambahkan setelah grid yang berisi Category dan Storage Location -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+    <!-- Category -->
+    <div class="space-y-2">
+        <label for="category" class="block text-sm font-semibold text-gray-700">
+            Kategori <span class="text-red-500">*</span>
+        </label>
+        <div class="relative">
+            <select name="category" id="category"
+                class="w-full border border-gray-300 rounded-xl py-3 px-4 pl-12 focus:border-green-600 focus:ring-2 focus:ring-green-200 transition duration-300 ease-in-out outline-none appearance-none bg-white"
+                required>
+                <option value="">Pilih Kategori</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->name }}" {{ old('category', $product->category) == $category->name ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+        </div>
+        @error('category')
+            <p class="text-red-500 text-sm mt-1 flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                {{ $message }}
+            </p>
+        @enderror
+    </div>
+
+    <!-- Storage Location -->
+    <div class="space-y-2">
+        <label for="storage_location" class="block text-sm font-semibold text-gray-700">
+            Lokasi Penyimpanan <span class="text-red-500">*</span>
+        </label>
+        <div class="relative">
+            <select name="storage_location" id="storage_location"
+                class="w-full border border-gray-300 rounded-xl py-3 px-4 pl-12 focus:border-green-600 focus:ring-2 focus:ring-green-200 transition duration-300 ease-in-out outline-none appearance-none bg-white"
+                required>
+                <option value="">Pilih Lokasi Penyimpanan</option>
+                @foreach ($storageLocations as $storageLocation)
+                    <option value="{{ $storageLocation->name }}" {{ old('storage_location', $product->storage_location) == $storageLocation->name ? 'selected' : '' }}>
+                        {{ $storageLocation->name }}
+                    </option>
+                @endforeach
+            </select>
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                    </path>
+                </svg>
+            </div>
+        </div>
+        @error('storage_location')
+            <p class="text-red-500 text-sm mt-1 flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                {{ $message }}
+            </p>
+        @enderror
+    </div>
+</div>
+
+<!-- Supplier Field - NEW -->
+<div class="space-y-2">
+    <label for="supplier_id" class="block text-sm font-semibold text-gray-700">Supplier</label>
+    <div class="relative">
+        <select name="supplier_id" id="supplier_id"
+            class="w-full border border-gray-300 rounded-xl py-3 px-4 pl-12 focus:border-green-600 focus:ring-2 focus:ring-green-200 transition duration-300 ease-in-out outline-none appearance-none bg-white">
+            <option value="">Pilih Supplier (Opsional)</option>
+            @foreach ($suppliers as $supplier)
+                <option value="{{ $supplier->id }}" {{ old('supplier_id', $product->supplier_id) == $supplier->id ? 'selected' : '' }}>
+                    {{ $supplier->name }}
+                </option>
+            @endforeach
+        </select>
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+        </div>
+        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+        </div>
+    </div>
+    <p class="text-xs text-gray-500 mt-1">
+        Supplier saat ini:
+        @if($product->supplier)
+            <span class="font-semibold text-gray-700">{{ $product->supplier->name }}</span>
+        @else
+            <span class="text-gray-400">Belum ada supplier</span>
+        @endif
+    </p>
+    @error('supplier_id')
+        <p class="text-red-500 text-sm mt-1 flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            {{ $message }}
+        </p>
+    @enderror
+</div>
 
                         <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
                             <!-- Stock -->
@@ -379,21 +468,46 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Form Tips -->
+                <div class="mt-6 bg-blue-50 border border-blue-200 rounded-2xl p-6">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <h3 class="font-semibold text-blue-900 mb-2">Tips Update Produk</h3>
+                            <ul class="text-sm text-blue-700 space-y-1">
+                                <li>• Klik "Generate Baru" jika ingin mengganti barcode dengan yang baru</li>
+                                <li>• Barcode lama akan diganti dan gambar barcode akan diperbarui</li>
+                                <li>• Pastikan barcode tetap unik jika diedit manual</li>
+                                <li>• Perubahan stok akan tercatat dalam history activity</li>
+                                <li>• Update kategori atau lokasi penyimpanan sesuai kebutuhan</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        function formatCurrency(input) {
-            // Hapus semua karakter selain angka
-            let value = input.value.replace(/[^\d]/g, '');
+        // Generate Random Barcode
+        document.getElementById('generate-barcode').addEventListener('click', function () {
+            const timestamp = Date.now();
+            const random = Math.floor(Math.random() * 10000);
+            const barcode = `${timestamp}${random}`.substring(0, 13); // 13 digit barcode
+            document.getElementById('barcode').value = barcode;
+        });
 
-            // Format angka dengan separator ribuan
+        // Format Currency
+        function formatCurrency(input) {
+            let value = input.value.replace(/[^\d]/g, '');
             if (value) {
                 value = parseInt(value, 10).toLocaleString('id-ID');
             }
-
-            // Set nilai kembali ke input
             input.value = value;
         }
 
@@ -401,8 +515,6 @@
         document.getElementById('product-form').addEventListener('submit', function (e) {
             const priceInput = document.getElementById('price');
             let priceValue = priceInput.value.replace(/[^\d]/g, '');
-
-            // Set nilai asli (tanpa format) ke hidden field atau langsung ke value
             priceInput.value = priceValue;
         });
     </script>
